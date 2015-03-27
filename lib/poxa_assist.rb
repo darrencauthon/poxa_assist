@@ -24,18 +24,14 @@ module PoxaAssist
                       else
                         [PoxaAssist.config.port, false]
                       end
-    Pusher.port      = port
-    Pusher.encrypted = encrypted
-
-    fields = { 
-               host:    :host,
-               key:     :app_key,
-               app_id:  :app_id,
-               secret:  :app_secret,
-             }
-    fields.each do |k, v|
-      Pusher.send("#{k}=".to_sym, PoxaAssist.config.send(v))
-    end
+    {
+      host:      PoxaAssist.config.host,
+      key:       PoxaAssist.config.app_key,
+      app_id:    PoxaAssist.config.app_id,
+      secret:    PoxaAssist.config.app_secret,
+      port:      port,
+      encrypted: encrypted,
+    }.each { |k, v| Pusher.send "#{k}=".to_sym, v }
   end
 
   def self.config
