@@ -246,4 +246,44 @@ describe PoxaAssist do
 
   end
 
+  describe "client js" do
+
+    [:host, :port, :app_key, :encrypted, :ssl_port].each do |field|
+
+      describe "replacing #{field} in the javascript file" do
+
+        let(:file) do
+          "#{random_string}{{#{field.to_s.upcase}}}#{random_string}"
+        end
+
+        let(:config) do
+          Struct.new(:host, :port, :app_key, :encrypted, :ssl_port)
+                .new(nil, nil, nil, nil, nil)
+        end
+
+        let(:value) { random_string }
+
+        before do
+          config.stubs(field).returns value
+          PoxaAssist.stubs(:config).returns config
+          PoxaAssist.stubs(:pusher_javascript_file).returns file
+        end
+
+        it "should replace the {{#{field.to_s.upcase}}} with the config value" do
+          PoxaAssist.client_js.include?(value).must_equal true
+        end
+
+        describe "but the value was passed as an argument" do
+          it "should replace the {{#{field.to_s.upcase}}} with the config value" do
+            config_value = random_string
+            PoxaAssist.client_js(field => config_value).include?(config_value).must_equal true
+          end
+        end
+
+      end
+
+    end
+
+  end
+
 end
