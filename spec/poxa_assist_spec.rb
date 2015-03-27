@@ -94,7 +94,7 @@ describe PoxaAssist do
 
     describe "just a ssl port was given" do
       it "should not set the encrypted flag" do
-        options = { port: Object.new }
+        options = { port: 7890 }
         Pusher.expects(:encrypted=).never
         PoxaAssist.start options
       end

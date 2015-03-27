@@ -43,12 +43,12 @@ module PoxaAssist
     @options ||= {}
     Struct.new(:host, :port, :ssl_port, :app_id, :app_key, :app_secret, :encrypted)
           .new((@options[:host]       || ENV['POXA_HOST']),
-               (@options[:port]       || ENV['POXA_PORT']).to_s.to_i,
-               (@options[:ssl_port]   || ENV['POXA_SSL_PORT']).to_s.to_i,
+               (@options[:port]       || ENV['POXA_PORT']).to_i,
+               (@options[:ssl_port]   || ENV['POXA_SSL_PORT']).to_i,
                (@options[:app_id]     || ENV['POXA_APP_ID']),
                (@options[:app_key]    || ENV['POXA_APP_KEY']),
                (@options[:app_secret] || ENV['POXA_APP_SECRET']),
-               (@options[:ssl_port]   || ENV['POXA_SSL_PORT']).to_s.to_i != 0)
+               (@options[:ssl_port]   || ENV['POXA_SSL_PORT']).to_i != 0)
   end
 
   # you will want to replace this yourself
