@@ -19,12 +19,14 @@ module PoxaAssist
   end
 
   def self.set_the_pusher_values
-    Pusher.port = if PoxaAssist.config.ssl_port && PoxaAssist.config.ssl_port > 0
-                    Pusher.encrypted = true
-                    PoxaAssist.config.ssl_port
-                  else
-                    PoxaAssist.config.port
-                  end
+    port, encrypted = if PoxaAssist.config.ssl_port && PoxaAssist.config.ssl_port > 0
+                        [PoxaAssist.config.ssl_port, true]
+                      else
+                        [PoxaAssist.config.port, false]
+                      end
+    Pusher.port      = port
+    Pusher.encrypted = encrypted
+
     fields = { 
                host:    :host,
                key:     :app_key,
