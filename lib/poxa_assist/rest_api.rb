@@ -14,7 +14,6 @@ module PoxaAssist
     end
 
     def self.generate_users_url channel, options = nil
-
       options = pull_options_from_config_if_necessary options
 
       url            = "/apps/#{options[:app_id]}/channels/#{channel}/users"
