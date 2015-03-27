@@ -1,5 +1,8 @@
 module PoxaAssist
-  PUSHER_JAVASCRIPT_FILE = <<EOF
+
+  def self.pusher_javascript_file
+
+<<EOF
 /*!
  * Pusher JavaScript Library v2.1.6
  * http://pusherapp.com/
@@ -140,4 +143,6 @@ Pusher.unsubscribeFrom = function(channelName) {
   Pusher.our_current.unsubscribe(channelName);
 }
 EOF
+  end
+
 end

@@ -60,82 +60,42 @@ describe PoxaAssist do
 
   describe "start" do
     
-    before do
-      Pusher.stubs(:host=)
-      Pusher.stubs(:port=)
-      Pusher.stubs(:key=)
-      Pusher.stubs(:app_id=)
-      Pusher.stubs(:secret=)
-    end
+    before { [:host=, :port=, :key=, :app_id=, :secret=].each { |f| Pusher.stubs f } }
 
     it "should set the host on pusher" do
-
-      options = {
-                  host: Object.new,
-                }
-
+      options = { host: Object.new }
       Pusher.expects(:host=).with options[:host]
-
       PoxaAssist.start options
-        
     end
 
     it "should set the port on pusher" do
-
-      options = {
-                  port: '1234'
-                }
-
+      options = { port: '1234'}
       Pusher.expects(:port=).with 1234
-
       PoxaAssist.start options
-        
     end
 
     it "should set the key on pusher" do
-
-      options = {
-                  app_key: Object.new
-                }
-
+      options = { app_key: Object.new }
       Pusher.expects(:key=).with options[:app_key]
-
       PoxaAssist.start options
-        
     end
 
     it "should set the app_id on pusher" do
-
-      options = {
-                  app_id: Object.new
-                }
-
+      options = { app_id: Object.new }
       Pusher.expects(:app_id=).with options[:app_id]
-
       PoxaAssist.start options
-        
     end
 
     it "should set the secret on pusher" do
-
-      options = {
-                  app_secret: Object.new
-                }
-
+      options = { app_secret: Object.new }
       Pusher.expects(:secret=).with options[:app_secret]
-
       PoxaAssist.start options
-        
     end
 
     describe "just a ssl port was given" do
       it "should not set the encrypted flag" do
-        options = {
-                    port: Object.new
-                  }
-
-        Pusher.expects(:encrypted=).never
-
+        options = { port: 7890 }
+        Pusher.expects(:encrypted=).with(false)
         PoxaAssist.start options
       end
     end
@@ -145,35 +105,23 @@ describe PoxaAssist do
       let(:ssl_port) { 8443 }
 
       it "should set the port on pusher" do
-        options = {
-                    ssl_port: ssl_port
-                  }
-
+        options = { ssl_port: ssl_port }
         Pusher.expects(:port=).with options[:ssl_port]
-
         PoxaAssist.start options
       end
 
       it "should set encrypted to true" do
-        options = {
-                    ssl_port: ssl_port
-                  }
-
+        options = { ssl_port: ssl_port }
         Pusher.expects(:encrypted=).with true
-
         PoxaAssist.start options
-          
       end
 
       describe "and a regular port was provided" do
         it "should set the SSL port" do
-          options = {
-                      ssl_port: ssl_port,
-                      port:     443 
-                    }
+          options = { ssl_port: ssl_port,
+                      port:     443 }
 
           Pusher.expects(:port=).with ssl_port
-
           PoxaAssist.start options
         end
       end
@@ -238,6 +186,46 @@ describe PoxaAssist do
 
         it "should work with symbols as well" do
           PoxaAssist.channel_for(name.to_sym).must_be_same_as expected
+        end
+
+      end
+
+    end
+
+  end
+
+  describe "client js" do
+
+    [:host, :port, :app_key, :encrypted, :ssl_port].each do |field|
+
+      describe "replacing #{field} in the javascript file" do
+
+        let(:file) do
+          "#{random_string}{{#{field.to_s.upcase}}}#{random_string}"
+        end
+
+        let(:config) do
+          Struct.new(:host, :port, :app_key, :encrypted, :ssl_port)
+                .new(nil, nil, nil, nil, nil)
+        end
+
+        let(:value) { random_string }
+
+        before do
+          config.stubs(field).returns value
+          PoxaAssist.stubs(:config).returns config
+          PoxaAssist.stubs(:pusher_javascript_file).returns file
+        end
+
+        it "should replace the {{#{field.to_s.upcase}}} with the config value" do
+          PoxaAssist.client_js.include?(value).must_equal true
+        end
+
+        describe "but the value was passed as an argument" do
+          it "should replace the {{#{field.to_s.upcase}}} with the config value" do
+            config_value = random_string
+            PoxaAssist.client_js(field => config_value).include?(config_value).must_equal true
+          end
         end
 
       end

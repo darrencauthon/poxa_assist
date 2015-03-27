@@ -14,7 +14,6 @@ module PoxaAssist
     end
 
     def self.generate_users_url channel, options = nil
-
       options = pull_options_from_config_if_necessary options
 
       url            = "/apps/#{options[:app_id]}/channels/#{channel}/users"
@@ -37,14 +36,14 @@ module PoxaAssist
 
       def pull_options_from_config_if_necessary options
         return options if options
-          {
-            host:       PoxaAssist.config.host,
-            ssl_port:   PoxaAssist.config.ssl_port,
-            port:       PoxaAssist.config.port,
-            app_id:     PoxaAssist.config.app_id,
-            app_key:    PoxaAssist.config.app_key,
-            app_secret: PoxaAssist.config.app_secret
-          }
+        {
+          host:       PoxaAssist.config.host,
+          ssl_port:   PoxaAssist.config.ssl_port,
+          port:       PoxaAssist.config.port,
+          app_id:     PoxaAssist.config.app_id,
+          app_key:    PoxaAssist.config.app_key,
+          app_secret: PoxaAssist.config.app_secret
+        }
       end
 
     end
