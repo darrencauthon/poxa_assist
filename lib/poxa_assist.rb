@@ -5,11 +5,11 @@ Dir[File.dirname(__FILE__) + '/poxa_assist/*.rb'].each { |f| require f }
 module PoxaAssist
 
   def self.client_js options = {}
-    pusher_javascript_file.gsub('{{HOST}}',      (options[:host]      || config.host).to_s)
-                          .gsub('{{PORT}}',      (options[:port]      || config.port).to_s)
-                          .gsub('{{APP_KEY}}',   (options[:app_key]   || config.app_key).to_s)
-                          .gsub('{{ENCRYPTED}}', (options[:encrypted] || config.encrypted).to_s)
-                          .gsub('{{SSL_PORT}}',  (options[:ssl_port]  || config.ssl_port).to_s)
+    fields_to_replace = [:host, :port, :app_key, :encrypted, :ssl_port]
+    fields_to_replace.reduce(pusher_javascript_file) do |file, field|
+      value = options[field] || config.send(field)
+      file.gsub "{{#{field.to_s.upcase}}}", value.to_s
+    end
   end
 
   def self.start options = {}
