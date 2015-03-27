@@ -119,6 +119,13 @@ var b=1;Pusher.auth_callbacks={};Pusher.authorizers={ajax:function(b,a){var d;d=
 c=!0}catch(g){a(!0,"JSON returned from webapp was invalid, yet status code was 200. Data was: "+d.responseText)}c&&a(!1,b)}else Pusher.warn("Couldn't get auth info from your webapp",d.status),a(!0,d.status)};d.send(this.composeQuery(b));return d},jsonp:function(c,a){this.authOptions.headers!==void 0&&Pusher.warn("Warn","To send headers with the auth request, you must use AJAX, rather than JSONP.");var d=b.toString();b++;var h=Pusher.Util.getDocument(),e=h.createElement("script");Pusher.auth_callbacks[d]=
 function(b){a(!1,b)};e.src=this.options.authEndpoint+"?callback="+encodeURIComponent("Pusher.auth_callbacks['"+d+"']")+this.composeQuery(c);d=h.getElementsByTagName("head")[0]||h.documentElement;d.insertBefore(e,d.firstChild)}}}).call(this);
 
+/*!
+ * Changes for Poxa Assist
+ *
+ * Copyright 2014, Darren Cauthon
+ * Released under the MIT licence.
+ */
+
 Pusher.our_current = new Pusher('{{APP_KEY}}', { encrypted: {{ENCRYPTED}} } );
 Pusher.subscribeToChannel = function(channel_name, event_name, callback) {
   var channel = Pusher.our_current.subscribe(channel_name);
