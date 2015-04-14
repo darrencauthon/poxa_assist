@@ -51,12 +51,12 @@ module PoxaAssist
                           [PoxaAssist.config.port, false]
                         end
       {
+        encrypted: encrypted,
         host:      PoxaAssist.config.host,
         key:       PoxaAssist.config.app_key,
         app_id:    PoxaAssist.config.app_id,
         secret:    PoxaAssist.config.app_secret,
         port:      port,
-        encrypted: encrypted,
       }.each { |k, v| Pusher.send "#{k}=".to_sym, v }
     end
 
